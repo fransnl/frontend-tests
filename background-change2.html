@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Color Extractor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            transition: background-color 1s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        #imageDisplay {
+            max-width: 100%;
+            max-height: 400px;
+            margin-top: 1rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-section {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .url-input {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        #imageUrl {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: #4a69bd;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #3c55a5;
+        }
+        
+        .upload-btn {
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+            background-color: #6a89cc;
+        }
+
+        .color-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .color-card {
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-sample {
+            height: 100px;
+            width: 100%;
+        }
+
+        .color-data {
+            padding: 0.5rem;
+            background-color: white;
+        }
+
+        .color-data p {
+            margin: 0.2rem 0;
+            font-size: 0.9rem;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .sample-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .sample-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .sample-image:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Color Extractor</h1>
+        
+        <div class="input-section">
+            <div class="url-input" style="display: hidden;">
+                <input type="text" id="imageUrl" placeholder="https://example.com/image.jpg">
+                <button id="loadButton">Load Image</button>
+            </div>
+            
+            <button class="upload-btn" id="uploadButton">Or Upload Image</button>
+            <input type="file" id="fileInput" accept="image/*">
+            
+            <div class="sample-images">
+                <img class="sample-image" src="/ghibli.jpeg" alt="Sample Image 1" data-url="/ghibli.jpeg">
+                <img class="sample-image" src="/ghibli2.jpg" alt="Sample Image 2" data-url="/ghibli2.jpg">
+                <img class="sample-image" src="/ghibli3.jpg" alt="Sample Image 3" data-url="/ghibli3.jpg">
+            </div>
+        </div>
+        
+        <div class="image-container">
+            <img id="imageDisplay" style="display: none;" alt="Selected Image">
+        </div>
+        
+        <div class="color-info" id="colorInfo"></div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const imageUrlInput = document.getElementById('imageUrl');
+        const loadButton = document.getElementById('loadButton');
+        const uploadButton = document.getElementById('uploadButton');
+        const fileInput = document.getElementById('fileInput');
+        const imageDisplay = document.getElementById('imageDisplay');
+        const colorInfo = document.getElementById('colorInfo');
+        const sampleImages = document.querySelectorAll('.sample-image');
+
+        // Initialize with sample images
+        sampleImages.forEach(img => {
+            const url = img.getAttribute('data-url');
+            img.src = url;
+            img.addEventListener('click', () => {
+                imageUrlInput.value = url;
+                loadImageFromUrl(url);
+            });
+        });
+
+        // Event Listeners
+        loadButton.addEventListener('click', () => {
+            const url = imageUrlInput.value.trim();
+            if (url) {
+                loadImageFromUrl(url);
+            }
+        });
+
+        uploadButton.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageDisplay.src = e.target.result;
+                    imageDisplay.style.display = 'block';
+                    imageDisplay.onload = processImage;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Function to load image from URL
+        function loadImageFromUrl(url) {
+            imageDisplay.src = url;
+            imageDisplay.style.display = 'block';
+            imageDisplay.onload = processImage;
+            imageDisplay.onerror = () => {
+                alert('Error loading image. Please check the URL and try again.');
+                imageDisplay.style.display = 'none';
+            };
+        }
+
+        // Process the image to extract colors
+        function processImage() {
+            // Create a canvas element
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions to match the image
+            canvas.width = imageDisplay.naturalWidth;
+            canvas.height = imageDisplay.naturalHeight;
+            
+            // Draw the image onto the canvas
+            ctx.drawImage(imageDisplay, 0, 0);
+            
+            // Get image data
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+            
+            // Color buckets for quantization (simple implementation)
+            const colorMap = {};
+            
+            // Sample pixels (skip some for performance)
+            const skipFactor = Math.max(1, Math.floor((pixels.length / 4) / 10000));
+            
+            for (let i = 0; i < pixels.length; i += 4 * skipFactor) {
+                const r = pixels[i];
+                const g = pixels[i + 1];
+                const b = pixels[i + 2];
+                const a = pixels[i + 3];
+                
+                // Skip transparent pixels
+                if (a < 128) continue;
+                
+                // Quantize colors (reduce precision to group similar colors)
+                const quantR = Math.round(r / 10) * 10;
+                const quantG = Math.round(g / 10) * 10;
+                const quantB = Math.round(b / 10) * 10;
+                
+                const colorKey = `${quantR},${quantG},${quantB}`;
+                
+                if (!colorMap[colorKey]) {
+                    colorMap[colorKey] = {
+                        r: r,
+                        g: g,
+                        b: b,
+                        count: 0
+                    };
+                }
+                
+                colorMap[colorKey].count++;
+            }
+            
+            // Convert to array and sort by frequency
+            const colorArray = Object.values(colorMap).sort((a, b) => b.count - a.count);
+            
+            // Take top colors
+            const topColors = colorArray.slice(0, 5);
+            
+            // Update UI with color information
+            updateColorInfo(topColors);
+            
+            // Set the background color to the most dominant color
+            if (topColors.length > 0) {
+                const dominantColor = topColors[0];
+                const hsl = rgbToHsl(dominantColor.r, dominantColor.g, dominantColor.b);
+                
+                // Adjust lightness for better visibility
+                const adjustedHsl = { ...hsl };
+                
+                // If too dark, lighten it
+                if (hsl.l < 0.5) {
+                    adjustedHsl.l = Math.min(0.9, hsl.l + 0.4);
+                }
+                // If too light, darken it
+                else if (hsl.l > 0.8) {
+                    adjustedHsl.l = Math.max(0.2, hsl.l - 0.3);
+                }
+                
+                // Lower saturation a bit for less intensity
+                adjustedHsl.s = Math.min(0.4, hsl.s);
+                
+                document.body.style.backgroundColor = `hsl(${Math.round(adjustedHsl.h * 360)}, ${Math.round(adjustedHsl.s * 100)}%, ${Math.round(adjustedHsl.l * 100)}%)`;
+            }
+        }
+
+        // Update the color information display
+        function updateColorInfo(colors) {
+            colorInfo.innerHTML = '';
+            
+            colors.forEach(color => {
+                const hsl = rgbToHsl(color.r, color.g, color.b);
+                
+                const colorCard = document.createElement('div');
+                colorCard.className = 'color-card';
+                
+                const colorSample = document.createElement('div');
+                colorSample.className = 'color-sample';
+                colorSample.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                
+                const colorData = document.createElement('div');
+                colorData.className = 'color-data';
+                
+                const hslString = `hsl(${Math.round(hsl.h * 360)}, ${Math.round(hsl.s * 100)}%, ${Math.round(hsl.l * 100)}%)`;
+                const rgbString = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                
+                colorData.innerHTML = `
+                    <p><strong>HSL:</strong> ${hslString}</p>
+                    <p><strong>RGB:</strong> ${rgbString}</p>
+                `;
+                
+                colorCard.appendChild(colorSample);
+                colorCard.appendChild(colorData);
+                colorInfo.appendChild(colorCard);
+                
+                // Add click event to apply this color to background
+                colorCard.addEventListener('click', () => {
+                    document.body.style.backgroundColor = hslString;
+                });
+            });
+        }
+
+        // Convert RGB to HSL
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            
+            if (max === min) {
+                h = s = 0; // achromatic
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                
+                h /= 6;
+            }
+            
+            return { h, s, l };
+        }
+
+        // Load a default image on start
+        window.onload = () => {
+            // Load the first sample image by default
+            if (sampleImages.length > 0) {
+                const defaultUrl = sampleImages[0].getAttribute('data-url');
+                imageUrlInput.value = defaultUrl;
+                loadImageFromUrl(defaultUrl);
+            }
+        };
+    </script>
+</body>
+</html>

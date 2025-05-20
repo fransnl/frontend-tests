@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Collection</title>
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #f9f9ff 0%, #f0f4ff 100%);
+      color: #333;
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+    
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    
+    /* Hero Section */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      margin-bottom: 64px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    
+    .hero-image {
+      flex: 0 0 420px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(0,0,30,0.08);
+    }
+    
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    
+    .hero-image:hover img {
+      transform: scale(1.02);
+    }
+    
+    .hero-content {
+      flex: 1;
+    }
+    
+    .hero-title {
+      font-size: 33px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #1e293b;
+      line-height: 1.2;
+    }
+    
+    .hero-description {
+      font-size: 17px;
+      line-height: 1.6;
+      color: #475569;
+      margin-bottom: 32px;
+    }
+    
+    /* Add Link Section */
+    .add-link {
+      padding: 24px 32px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0,0,30,0.04);
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .add-link-input {
+      flex: 1;
+      height: 52px;
+      border: 1px solid #e2e8f0;
+      padding: 0 16px;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+    
+    .add-link-input:focus {
+      outline: none;
+      border-color: #94a3b8;
+      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.1);
+    }
+    
+    .add-link-button {
+      height: 52px;
+      padding: 0 24px;
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .add-link-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+    
+    /* Links Grid */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    
+    .link-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,30,0.06);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .link-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,30,0.1);
+    }
+    
+    .link-preview {
+      height: 160px;
+      overflow: hidden;
+    }
+    
+    .link-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    
+    .link-card:hover .link-preview img {
+      transform: scale(1.05);
+    }
+    
+    .link-content {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .link-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    
+    .link-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .link-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1e293b;
+      flex: 1;
+    }
+    
+    @media (max-width: 768px) {
+      .hero {
+        flex-direction: column;
+        gap: 32px;
+      }
+      
+      .hero-image {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+      
+      .add-link {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-image">
+        <img src="https://media0.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif?cid=6c09b9525xdjvxir2qh5sbqx1dv1v2buu0ol3u082esoka1q&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g" alt="Collection Banner">
+      </div>
+      <div class="hero-content">
+        <h1 class="hero-title">Your Curated Collection</h1>
+        <p class="hero-description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisi vel consectetur euismod, nisi nisl consectetur nisl, euismod nisl nisl euismod nisl. Nullam euismod, nisi vel consectetur euismod, nisi nisl consectetur nisl, euismod nisl nisl euismod nisl.
+        </p>
+      </div>
+    </section>
+    
+    <!-- Add Link Section -->
+    <section class="add-link">
+      <input type="text" class="add-link-input" placeholder="Enter website URL...">
+      <button class="add-link-button">Add to Collection</button>
+    </section>
+    
+    <!-- Links Grid -->
+    <section class="links-grid">
+      <!-- Link Card 1 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <h3 class="link-title">YouTube Video Tutorial</h3>
+        </div>
+      </div>
+      
+      <!-- Link Card 2 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <h3 class="link-title">Medium Article</h3>
+        </div>
+      </div>
+      
+      <!-- Link Card 3 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <h3 class="link-title">Design Inspiration</h3>
+        </div>
+      </div>
+      
+      <!-- Link Card 4 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <h3 class="link-title">Developer Documentation</h3>
+        </div>
+      </div>
+      
+      <!-- Link Card 5 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <h3 class="link-title">CSS Reference Guide</h3>
+        </div>
+      </div>
+      
+      <!-- Link Card 6 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <h3 class="link-title">JavaScript Framework</h3>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

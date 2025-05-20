@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Collection</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-light: #818cf8;
+            --secondary-color: #14b8a6;
+            --secondary-light: #5eead4;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --text-1: 15px;
+            --text-2: 16px;
+            --text-3: 17px;
+            --text-4: 19px;
+            --text-5: 23px;
+            --text-6: 25px;
+            --text-7: 33px;
+            --text-8: 41px;
+            --radius-small: 4px;
+            --radius-medium: 6px;
+            --radius-large: 8px;
+            --radius-xl: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--gray-800);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .header-image {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-large);
+            object-fit: cover;
+            margin-right: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content h1 {
+            font-size: var(--text-7);
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header-content p {
+            font-size: var(--text-3);
+            color: var(--gray-600);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .add-link-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(20, 184, 166, 0.05) 100%);
+            padding: 1.5rem;
+            border-radius: var(--radius-large);
+            margin-bottom: 2.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--gray-200);
+        }
+
+        .add-link-form {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .add-link-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            font-size: var(--text-2);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-medium);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .add-link-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .add-link-button {
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            font-size: var(--text-2);
+            font-weight: 500;
+            border: none;
+            border-radius: var(--radius-medium);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .add-link-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .link-card {
+            background-color: white;
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--gray-200);
+        }
+
+        .link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .link-preview {
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .link-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .link-card:hover .link-preview img {
+            transform: scale(1.05);
+        }
+
+        .link-info {
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .link-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .link-title {
+            font-size: var(--text-3);
+            font-weight: 500;
+            color: var(--gray-800);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-image {
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+            }
+            
+            .add-link-form {
+                flex-direction: column;
+            }
+            
+            .links-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://media0.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif?cid=6c09b9525xdjvxir2qh5sbqx1dv1v2buu0ol3u082esoka1q&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g" alt="Collection Banner" class="header-image">
+            <div class="header-content">
+                <h1>My Link Collection</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisi vel consectetur interdum, nibh risus mollis nisi, vel consectetur nisl nunc vel lectus.</p>
+            </div>
+        </header>
+
+        <section class="add-link-section">
+            <form class="add-link-form">
+                <input type="text" class="add-link-input" placeholder="Enter website URL here...">
+                <button type="submit" class="add-link-button">Add Link</button>
+            </form>
+        </section>
+
+        <div class="links-grid">
+            <!-- Link Card 1 -->
+            <div class="link-card">
+                <div class="link-preview">
+                    <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+                </div>
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon" class="link-icon">
+                    <div class="link-title">Productivity Tools</div>
+                </div>
+            </div>
+
+            <!-- Link Card 2 -->
+            <div class="link-card">
+                <div class="link-preview">
+                    <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+                </div>
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon" class="link-icon">
+                    <div class="link-title">Design Resources</div>
+                </div>
+            </div>
+
+            <!-- Link Card 3 -->
+            <div class="link-card">
+                <div class="link-preview">
+                    <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+                </div>
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon" class="link-icon">
+                    <div class="link-title">Development Tutorials</div>
+                </div>
+            </div>
+
+            <!-- Link Card 4 -->
+            <div class="link-card">
+                <div class="link-preview">
+                    <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+                </div>
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon" class="link-icon">
+                    <div class="link-title">Marketing Analytics</div>
+                </div>
+            </div>
+
+            <!-- Link Card 5 -->
+            <div class="link-card">
+                <div class="link-preview">
+                    <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+                </div>
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon" class="link-icon">
+                    <div class="link-title">Social Media Tools</div>
+                </div>
+            </div>
+
+            <!-- Link Card 6 -->
+            <div class="link-card">
+                <div class="link-preview">
+                    <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+                </div>
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon" class="link-icon">
+                    <div class="link-title">Content Creation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Notebook LM, please look at sources such as Reddit, Quora, and niche forums to find pain points regarding [Topic of interest].
+
+Please gather studies from leading consulting firms and other credible sources on [app]. I'm looking for insights on industry trends and related developments from the past 18 months. Please exclude anything published before 2024.
+
+I'm looking for the most successful [apps]. Please return only the homepage or app page of fast growing startups or established market leaders. I'm not looking for articles or listicles, just direct links to their main product pages.
+
+Please analyze the pain points in these sources.
+
+Please return an aggregate of the user trends in the [], apps, website and software space, especially as it relates to the conversation above.
+
+Using the selected sources, please outline the key features for an app that addresses the identified concerns.

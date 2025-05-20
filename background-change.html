@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Background Color</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles can go here if Tailwind isn't sufficient */
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s ease-in-out; /* Smooth transition for color change */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .content-container {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for content */
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="content-container">
+        <h1 class="text-3xl font-semibold mb-4 text-gray-800">Image-Driven Background Color</h1>
+        <p class="text-gray-600 mb-6">The background color of this page is dynamically set based on the image source below.</p>
+
+        <img id="sourceImage" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2o4enFidWI3b3RqbzFuOTdhMXlzdnZ6cWVnNHBrYmRkemM3ZXZ5dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3TZgJXiwbdbLG/giphy.gif" alt="Placeholder Image">
+
+        <div class="mt-4">
+            <p class="text-sm text-gray-700">Current Image Source:</p>
+            <p id="imageSrcDisplay" class="text-xs text-gray-500 break-all"></p>
+            <p class="text-sm text-gray-700 mt-2">Calculated HSL Background:</p>
+            <p id="hslValueDisplay" class="text-sm text-gray-500"></p>
+        </div>
+
+        <button id="changeImageBtn" class="mt-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-colors duration-150">
+            Change Image & Background
+        </button>
+    </div>
+
+    <script>
+        // Function to generate a hash code from a string
+        function simpleHashCode(str) {
+            let hash = 0;
+            if (str.length === 0) {
+                return hash;
+            }
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return Math.abs(hash); // Ensure positive number
+        }
+
+        // Function to set background color based on image src
+        function setBackgroundColorFromImageSrc() {
+            const imgElement = document.getElementById('sourceImage');
+            const imageSrcDisplay = document.getElementById('imageSrcDisplay');
+            const hslValueDisplay = document.getElementById('hslValueDisplay');
+
+            if (imgElement && imgElement.src) {
+                const srcString = imgElement.src;
+                imageSrcDisplay.textContent = srcString;
+
+                // Generate Hue from the image source string
+                // We use a simple hash function to get a number from the string
+                const hash = simpleHashCode(srcString);
+                const hue = hash % 360; // Hue is a degree on the color wheel (0-360)
+
+                // Set Saturation and Lightness to fixed values for pleasant colors
+                // You can experiment with these values
+                const saturation = 70; // Saturation in percentage (0-100%)
+                const lightness = 85;  // Lightness in percentage (0-100%)
+
+                const hslColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+
+                // Apply the color to the body background
+                document.body.style.backgroundColor = hslColor;
+                hslValueDisplay.textContent = hslColor;
+
+                console.log(`Image src: ${srcString}`);
+                console.log(`Calculated HSL: ${hslColor}`);
+            } else {
+                console.error("Image element or src not found!");
+                imageSrcDisplay.textContent = "Error: Image or src not found.";
+                hslValueDisplay.textContent = "N/A";
+            }
+        }
+
+        // Function to change the image source and update background
+        function changeImage() {
+            const imgElement = document.getElementById('sourceImage');
+            // Simple way to get a new image src - by appending a random number or changing text
+            const randomNumber = Math.floor(Math.random() * 1000);
+            const colors = ['E81123/FFFFFF', '0078D4/FFFFFF', '0099BC/FFFFFF', 'FF8C00/000000', '3A96DD/FFFFFF'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+            imgElement.src = `https://placehold.co/600x400/${randomColor}?text=Image+${randomNumber}`;
+            // The 'load' event ensures the new src is loaded before we try to process it,
+            // though for placeholder URLs it's usually instant.
+            // For real images, this is more important.
+            imgElement.onload = () => {
+                setBackgroundColorFromImageSrc();
+            };
+            // If the image fails to load, we might still want to update based on the attempted src
+            imgElement.onerror = () => {
+                console.warn("New image failed to load, but will attempt to set color based on its src.");
+                setBackgroundColorFromImageSrc();
+            }
+        }
+
+        // Add event listener to the button
+        const changeImageButton = document.getElementById('changeImageBtn');
+        if (changeImageButton) {
+            changeImageButton.addEventListener('click', changeImage);
+        }
+
+        // Set the initial background color when the page loads
+        // Ensure the image is loaded before trying to access its src,
+        // especially if it's a remote image that might take time.
+        window.onload = () => {
+            const imgElement = document.getElementById('sourceImage');
+            if (imgElement.complete) { // If image is already loaded (e.g., from cache)
+                setBackgroundColorFromImageSrc();
+            } else {
+                imgElement.onload = setBackgroundColorFromImageSrc;
+                // Handle cases where the image might fail to load
+                imgElement.onerror = () => {
+                    console.error("Initial image failed to load. Cannot set background color based on it.");
+                    document.getElementById('imageSrcDisplay').textContent = "Error: Initial image failed to load.";
+                    document.getElementById('hslValueDisplay').textContent = "N/A";
+                };
+            }
+        };
+    </script>
+
+</body>
+</html>

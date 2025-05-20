@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Link Collection Dashboard</title>
+  <style>
+    :root {
+      --primary: #2E77E5;
+      --primary-light: #ECF2FF;
+      --secondary: #F7F7F7;
+      --accent: #FF7A5A;
+      --text-primary: #333333;
+      --text-secondary: #777777;
+      --border-color: #E6E6E6;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --radius-small: 4px;
+      --radius-medium: 6px;
+      --radius-large: 8px;
+      --radius-xl: 12px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(150deg, var(--secondary) 0%, white 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    
+    header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 48px;
+    }
+    
+    .header-image {
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius-large);
+      overflow: hidden;
+      margin-right: 32px;
+      box-shadow: var(--shadow);
+    }
+    
+    .header-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .header-content h1 {
+      font-size: 33px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    
+    .header-content p {
+      font-size: 17px;
+      line-height: 1.6;
+      max-width: 640px;
+      color: var(--text-secondary);
+    }
+    
+    .add-link-section {
+      background-color: white;
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+    
+    .add-link-form {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .add-link-form input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-medium);
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    
+    .add-link-form input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(46, 119, 229, 0.1);
+    }
+    
+    .add-link-form button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-medium);
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    
+    .add-link-form button:hover {
+      background-color: #2567d2;
+    }
+    
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    
+    .link-card {
+      background-color: white;
+      border-radius: var(--radius-large);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid var(--border-color);
+    }
+    
+    .link-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    }
+    
+    .link-preview {
+      width: 100%;
+      height: 160px;
+      overflow: hidden;
+    }
+    
+    .link-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .link-card:hover .link-preview img {
+      transform: scale(1.05);
+    }
+    
+    .link-content {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .link-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      border-radius: var(--radius-small);
+      overflow: hidden;
+    }
+    
+    .link-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    .link-title {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text-primary);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .header-image {
+        margin-right: 0;
+        margin-bottom: 24px;
+      }
+      
+      .add-link-form {
+        flex-direction: column;
+      }
+      
+      .links-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-image">
+        <img src="https://media0.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif?cid=6c09b9525xdjvxir2qh5sbqx1dv1v2buu0ol3u082esoka1q&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g" alt="Collection Header Image">
+      </div>
+      <div class="header-content">
+        <h1>My Web Collection</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies, nunc nisl aliquet nunc, quis aliquam nisl nunc quis nisl. Nullam euismod, nisl eget aliquam ultricies.</p>
+      </div>
+    </header>
+    
+    <div class="add-link-section">
+      <form class="add-link-form">
+        <input type="text" placeholder="Enter website URL to add to collection..." aria-label="Enter website URL">
+        <button type="submit">Add Link</button>
+      </form>
+    </div>
+    
+    <div class="links-grid">
+      <!-- Link Card 1 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <div class="link-title">YouTube Video Tutorial</div>
+        </div>
+      </div>
+      
+      <!-- Link Card 2 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <div class="link-title">Frontend Development Course</div>
+        </div>
+      </div>
+      
+      <!-- Link Card 3 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <div class="link-title">CSS Animation Techniques</div>
+        </div>
+      </div>
+      
+      <!-- Link Card 4 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <div class="link-title">JavaScript Fundamentals</div>
+        </div>
+      </div>
+      
+      <!-- Link Card 5 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <div class="link-title">Responsive Design Workshop</div>
+        </div>
+      </div>
+      
+      <!-- Link Card 6 -->
+      <div class="link-card">
+        <div class="link-preview">
+          <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview">
+        </div>
+        <div class="link-content">
+          <div class="link-icon">
+            <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon">
+          </div>
+          <div class="link-title">UI/UX Best Practices</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

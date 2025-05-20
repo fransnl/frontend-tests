@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Collection</title>
+    <style>
+        :root {
+            /* Design system variables */
+            --text-1: 15px;
+            --text-2: 16px;
+            --text-3: 17px;
+            --text-4: 19px;
+            --text-5: 23px;
+            --text-6: 25px;
+            --text-7: 33px;
+            --text-8: 41px;
+
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --radius-xl: 12px;
+
+            /* Color scheme - soft gradients */
+            --primary-gradient: linear-gradient(135deg, #6e8efb, #a777e3);
+            --secondary-gradient: linear-gradient(135deg, #84fab0, #8fd3f4);
+            --tertiary-gradient: linear-gradient(135deg, #f6d365, #fda085);
+
+            /* Base colors */
+            --primary: #6e8efb;
+            --primary-dark: #5a73c7;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --bg-color: #f7fafc;
+            --card-bg: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .main-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: var(--radius-xl);
+            margin-bottom: 24px;
+            box-shadow: inset 3px 12px 24px var(--shadow-color);
+            transition: transform 0.3s ease;
+            aspect-ratio: 16/9;
+        }
+
+        h1 {
+            font-size: var(--text-8);
+            margin-bottom: 16px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .description {
+            font-size: var(--text-3);
+            color: var(--text-light);
+            max-width: 720px;
+            margin: 0 auto 32px;
+        }
+
+        .add-link-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 48px;
+        }
+
+        .add-link-form {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 6px 12px var(--shadow-color);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .add-link-form:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px var(--shadow-color);
+        }
+
+        .add-link-input {
+            flex-grow: 1;
+            padding: 16px 20px;
+            font-size: var(--text-2);
+            border: none;
+            outline: none;
+        }
+
+        .add-link-button {
+            padding: 16px 32px;
+            font-size: var(--text-2);
+            font-weight: 600;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .add-link-button:hover {
+            opacity: 0.9;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .link-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .link-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow-color);
+        }
+
+        .link-preview {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .link-info {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .link-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .link-title {
+            font-size: var(--text-3);
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Micro-interactions */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .add-link-button:active {
+            animation: pulse 0.3s ease;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 0;
+            color: var(--text-light);
+            font-size: var(--text-4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="https://media0.giphy.com/media/qgQUggAC3Pfv687qPC/giphy.gif?cid=6c09b9525xdjvxir2qh5sbqx1dv1v2buu0ol3u082esoka1q&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g"
+                alt="Main Visual" class="main-image">
+            <h1>Link Collection</h1>
+            <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget
+                ultricies ultricies, nunc nisl ultricies nunc, quis ultricies nisl nisl eget ultricies ultricies.</p>
+        </header>
+
+        <div class="add-link-section">
+            <div class="add-link-form">
+                <input type="text" class="add-link-input" placeholder="Enter website URL to add...">
+                <button class="add-link-button">Add Link</button>
+            </div>
+        </div>
+
+        <div class="link-grid">
+            <!-- Link Card 1 -->
+            <div class="link-card">
+                <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview"
+                    class="link-preview">
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon"
+                        class="link-icon">
+                    <h3 class="link-title">YouTube Tutorial</h3>
+                </div>
+            </div>
+
+            <!-- Link Card 2 -->
+            <div class="link-card">
+                <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview"
+                    class="link-preview">
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon"
+                        class="link-icon">
+                    <h3 class="link-title">Design Resources</h3>
+                </div>
+            </div>
+
+            <!-- Link Card 3 -->
+            <div class="link-card">
+                <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview"
+                    class="link-preview">
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon"
+                        class="link-icon">
+                    <h3 class="link-title">Frontend Tools</h3>
+                </div>
+            </div>
+
+            <!-- Link Card 4 -->
+            <div class="link-card">
+                <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview"
+                    class="link-preview">
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon"
+                        class="link-icon">
+                    <h3 class="link-title">Learn CSS Grid Layout</h3>
+                </div>
+            </div>
+
+            <!-- Link Card 5 -->
+            <div class="link-card">
+                <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview"
+                    class="link-preview">
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon"
+                        class="link-icon">
+                    <h3 class="link-title">JavaScript Tips and Tricks</h3>
+                </div>
+            </div>
+
+            <!-- Link Card 6 -->
+            <div class="link-card">
+                <img src="https://i.ytimg.com/vi/zFFuV_vXNhY/maxresdefault.jpg" alt="Website Preview"
+                    class="link-preview">
+                <div class="link-info">
+                    <img src="https://www.youtube.com/s/desktop/08f2775a/img/logos/favicon.ico" alt="Website Icon"
+                        class="link-icon">
+                    <h3 class="link-title">UX Design Principles</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

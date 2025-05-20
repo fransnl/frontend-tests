@@ -1,0 +1,23 @@
+{
+    "task": "Create a website design, the rules must be strictly followed!",
+    "rules": [
+        "You are generating a design for the website using the design system.",
+        "You consider all the data that needs to be displayed on the website and create a layout that is easy and looks good to navigate.",
+        "Output must be in great and specific detail",
+        "All these rules must be followed strictly."
+    ],
+    "data": {
+        "Page": [
+            "Image, use image-placeholder",
+            "Title",
+            "Description of group, use lorem ipsum",
+            "Text input and button to add Link element into grid.",
+            "Grid of Link elements"
+        ],
+        "Link element": [
+            "Preview image of website, use image placeholder",
+            "Title",
+            "Icon for website, use icon placeholder"
+        ]
+    }
+}
